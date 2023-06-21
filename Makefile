@@ -1,4 +1,5 @@
 INGEST=ghcr.io/alephdata/ingest-file
+INGEST_IO=ghcr.io/investigativedata/ingest-file
 COMPOSE=docker-compose
 DOCKER=$(COMPOSE) run --rm ingest-file
 
@@ -13,7 +14,7 @@ pull-cache:
 	-docker pull -q $(INGEST):cache
 
 cached-build: pull-cache
-	docker build --cache-from $(INGEST):cache -t $(INGEST) .
+	docker build --cache-from $(INGEST):cache -t $(INGEST_IO) .
 
 fresh-cache:
 	# re-generate cache images on a daily basis to avoid using

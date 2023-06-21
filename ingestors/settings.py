@@ -1,6 +1,6 @@
+from ftmstore import settings as fts
 from servicelayer import env
 from servicelayer import settings as sls
-from ftmstore import settings as fts
 
 TESTING = False
 
@@ -21,22 +21,22 @@ ANALYZE_ENTITIES = env.to_bool("INGESTORS_ANALYZE_ENTITIES", True)
 
 # List available NER models
 NER_MODELS = {
-    "eng": "en_core_web_sm",
-    "deu": "de_core_news_sm",
-    "fra": "fr_core_news_sm",
-    "spa": "es_core_news_sm",
-    "rus": "ru_core_news_sm",
-    "por": "pt_core_news_sm",
-    "ron": "ro_core_news_sm",
-    "mkd": "mk_core_news_sm",
-    "ell": "el_core_news_sm",
-    "pol": "pl_core_news_sm",
-    "ita": "it_core_news_sm",
-    "lit": "lt_core_news_sm",
-    "nld": "nl_core_news_sm",
-    "nob": "nb_core_news_sm",
-    "nor": "nb_core_news_sm",
-    "dan": "da_core_news_sm",
+    "eng": "en_dep_web_sm",
+    "deu": "de_dep_news_sm",
+    "fra": "fr_dep_news_sm",
+    "spa": "es_dep_news_sm",
+    "rus": "ru_dep_news_sm",
+    "por": "pt_dep_news_sm",
+    "ron": "ro_dep_news_sm",
+    "mkd": "mk_dep_news_sm",
+    "ell": "el_dep_news_sm",
+    "pol": "pl_dep_news_sm",
+    "ita": "it_dep_news_sm",
+    "lit": "lt_dep_news_sm",
+    "nld": "nl_dep_news_sm",
+    "nob": "nb_dep_news_sm",
+    "nor": "nb_dep_news_sm",
+    "dan": "da_dep_news_sm",
 }
 
 # FastText type prediction model file

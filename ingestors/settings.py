@@ -21,7 +21,6 @@ ANALYZE_ENTITIES = env.to_bool("INGESTORS_ANALYZE_ENTITIES", True)
 
 # List available NER models
 NER_MODELS = {
-<<<<<<< HEAD
     "eng": "en_core_web_lg",
     "spa": "es_core_news_lg",
     "deu": "de_core_news_sm",
@@ -40,26 +39,6 @@ NER_MODELS = {
     "nob": "nb_core_news_sm",
     "nor": "nb_core_news_sm",
     "swe": "sv_core_news_sm",
-=======
-    "eng": "en_core_web_trf",
-    "deu": "de_dep_news_trf",
-    "fra": "fr_dep_news_trf",
-    "spa": "es_dep_news_trf",
-    "dan": "da_core_news_trf",
-    "ukr": "uk_core_news_trf",
-    "rus": "ru_core_news_lg",
-    "por": "pt_core_news_lg",
-    "ron": "ro_core_news_lg",
-    "mkd": "mk_core_news_lg",
-    "ell": "el_core_news_lg",
-    "pol": "pl_core_news_lg",
-    "ita": "it_core_news_lg",
-    "lit": "lt_core_news_lg",
-    "nld": "nl_core_news_lg",
-    "nob": "nb_core_news_lg",
-    "nor": "nb_core_news_lg",
-    "swe": "sv_core_news_lg",
->>>>>>> 43caa7dd7 (Update spacy models)
 }
 
 # FastText type prediction model file

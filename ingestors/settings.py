@@ -21,12 +21,12 @@ ANALYZE_ENTITIES = env.to_bool("INGESTORS_ANALYZE_ENTITIES", True)
 
 # List available NER models
 NER_MODELS = {
-    "eng": "en_core_web_trf",
-    "deu": "de_dep_news_trf",
-    "fra": "fr_dep_news_trf",
-    "spa": "es_dep_news_trf",
-    "dan": "da_core_news_trf",
-    "ukr": "uk_core_news_trf",
+    "eng": "en_core_web_lg",
+    "deu": "de_core_news_lg",
+    "fra": "fr_core_news_lg",
+    "spa": "es_core_news_lg",
+    "dan": "da_core_news_lg",
+    "ukr": "uk_core_news_lg",
     "rus": "ru_core_news_lg",
     "por": "pt_core_news_lg",
     "ron": "ro_core_news_lg",

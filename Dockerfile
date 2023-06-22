@@ -129,13 +129,13 @@ RUN pip3 install --no-cache-dir --prefer-binary --upgrade setuptools wheel
 RUN pip3 install --no-cache-dir --prefer-binary -r /tmp/requirements.txt
 
 # Install spaCy models
-RUN python3 -m spacy download en_core_web_trf
-RUN python3 -m spacy download de_dep_news_trf
-RUN python3 -m spacy download fr_dep_news_trf
-RUN python3 -m spacy download es_dep_news_trf
+RUN python3 -m spacy download en_core_web_lg
+RUN python3 -m spacy download de_core_news_lg
+RUN python3 -m spacy download fr_core_news_lg
+RUN python3 -m spacy download es_core_news_lg
 
-RUN python3 -m spacy download da_core_news_trf
-RUN python3 -m spacy download uk_core_news_trf
+RUN python3 -m spacy download da_core_news_lg
+RUN python3 -m spacy download uk_core_news_lg
 
 RUN python3 -m spacy download ru_core_news_lg
 RUN python3 -m spacy download pt_core_news_lg

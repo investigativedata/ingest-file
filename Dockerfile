@@ -129,21 +129,25 @@ RUN pip3 install --no-cache-dir --prefer-binary --upgrade setuptools wheel
 RUN pip3 install --no-cache-dir --prefer-binary -r /tmp/requirements.txt
 
 # Install spaCy models
-RUN python3 -m spacy download en_dep_web_sm \
-    && python3 -m spacy download de_dep_news_sm \
-    && python3 -m spacy download fr_dep_news_sm \
-    && python3 -m spacy download es_dep_news_sm
-RUN python3 -m spacy download ru_dep_news_sm \
-    && python3 -m spacy download pt_dep_news_sm \
-    && python3 -m spacy download ro_dep_news_sm \
-    && python3 -m spacy download mk_dep_news_sm
-RUN python3 -m spacy download el_dep_news_sm \
-    && python3 -m spacy download pl_dep_news_sm \
-    && python3 -m spacy download it_dep_news_sm \
-    && python3 -m spacy download lt_dep_news_sm \
-    && python3 -m spacy download nl_dep_news_sm \
-    && python3 -m spacy download nb_dep_news_sm \
-    && python3 -m spacy download da_dep_news_sm
+RUN python3 -m spacy download en_core_web_trf
+RUN python3 -m spacy download de_dep_news_trf
+RUN python3 -m spacy download fr_dep_news_trf
+RUN python3 -m spacy download es_dep_news_trf
+
+RUN python3 -m spacy download da_core_news_trf
+RUN python3 -m spacy download uk_core_news_trf
+
+RUN python3 -m spacy download ru_core_news_lg
+RUN python3 -m spacy download pt_core_news_lg
+RUN python3 -m spacy download ro_core_news_lg
+RUN python3 -m spacy download mk_core_news_lg
+RUN python3 -m spacy download el_core_news_lg
+RUN python3 -m spacy download pl_core_news_lg
+RUN python3 -m spacy download it_core_news_lg
+RUN python3 -m spacy download lt_core_news_lg
+RUN python3 -m spacy download nl_core_news_lg
+RUN python3 -m spacy download nb_core_news_lg
+RUN python3 -m spacy download sv_core_news_lg
 # RUN python3 -m spacy download zh_core_web_sm
 
 COPY . /ingestors

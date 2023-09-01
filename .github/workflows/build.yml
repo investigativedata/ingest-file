@@ -28,7 +28,7 @@ jobs:
             type=ref,event=branch
             type=semver,pattern={{version}}
             type=sha
-            type=raw,value=latest
+            # type=raw,value=latest
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
         with:

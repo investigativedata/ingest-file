@@ -1,13 +1,8 @@
 name: package
 
 on:
-<<<<<<< HEAD
-  push:
-  merge_group:
-=======
   push: {}
   workflow_dispatch: {}
->>>>>>> a9c419707 (Adjust github action for IO build)
 
 permissions:
   packages: write

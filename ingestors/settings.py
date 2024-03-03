@@ -39,7 +39,7 @@ NER_MODELS_DEFAULTS = {
 }
 
 def get_model_name(lang: str) -> str:
-    return env.get(f"NER_MODELS_{lang.upper()}", NER_MODELS_DEFAULTS[lang])
+    return env.get(f"NER_MODELS_{lang}".upper(), NER_MODELS_DEFAULTS[lang])
 
 NER_MODELS = {lang: get_model_name(lang) for lang in NER_MODELS_DEFAULTS}
 

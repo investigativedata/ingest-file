@@ -19,7 +19,7 @@ LID_MODEL_PATH = env.get("INGESTORS_LID_MODEL_PATH", "/ingestors/data/lid.176.ft
 ANALYZE_ENTITIES = env.to_bool("INGESTORS_ANALYZE_ENTITIES", True)
 
 # List available NER models
-NER_MODELS = {
+NER_MODELS_DEFAULTS = {
     "eng": "en_core_web_sm",
     "deu": "de_core_news_sm",
     "fra": "fr_core_news_sm",
@@ -37,6 +37,11 @@ NER_MODELS = {
     "nor": "nb_core_news_sm",
     "dan": "da_core_news_sm",
 }
+
+def get_model_name(lang: str) -> str:
+    return env.get(f"NER_MODELS_{lang.upper()}", NER_MODELS_DEFAULTS[lang])
+
+NER_MODELS = {lang: get_model_name(lang) for lang in NER_MODELS_DEFAULTS}
 
 # FastText type prediction model file
 NER_TYPE_MODEL_PATH = env.get(

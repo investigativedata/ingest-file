@@ -1,4 +1,4 @@
-FROM python:3.9-bookworm
+FROM python:3.11-slim
 ENV DEBIAN_FRONTEND noninteractive
 
 LABEL org.opencontainers.image.title "FollowTheMoney File Ingestors"
@@ -10,7 +10,8 @@ RUN echo "deb http://http.us.debian.org/debian stable non-free" >/etc/apt/source
     && apt-get -qq -y update \
     && apt-get -qq -y install build-essential locales \
     # python deps (mostly to install their dependencies)
-    python3-dev \
+    git python3-dev \
+    pkg-config libicu-dev \
     # tesseract
     tesseract-ocr libtesseract-dev libleptonica-dev \
     # libraries
@@ -24,6 +25,8 @@ RUN echo "deb http://http.us.debian.org/debian stable non-free" >/etc/apt/source
     libtiff5-dev \
     libtiff-tools ghostscript librsvg2-bin jbig2dec \
     pst-utils libgif-dev \
+    # necessary for python-magic
+    libmagic1 \
     ### tesseract
     tesseract-ocr-eng \
     tesseract-ocr-swa \
@@ -121,6 +124,8 @@ RUN mkdir /models/ && \
     curl -o "/models/model_type_prediction.ftz" "https://public.data.occrp.org/develop/models/types/type-08012020-7a69d1b.ftz"
 
 COPY requirements.txt /tmp/
+RUN pip3 install --no-cache-dir -q -U pip setuptools
+RUN pip3 install --no-binary=:pyicu: pyicu
 RUN pip3 install --no-cache-dir --no-binary "tesserocr" -r /tmp/requirements.txt
 
 # Install spaCy models
@@ -143,7 +148,7 @@ RUN python3 -m spacy download el_core_news_sm \
 
 COPY . /ingestors
 WORKDIR /ingestors
-RUN pip install --no-cache-dir --config-settings editable_mode=compat --use-pep517 -e /ingestors
+RUN pip3 install --no-cache-dir --config-settings editable_mode=compat --use-pep517 -e /ingestors
 RUN chown -R app:app /ingestors
 
 ENV ARCHIVE_TYPE=file \

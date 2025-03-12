@@ -5,11 +5,12 @@ from pymediainfo import MediaInfo
 from ingestors.ingestor import Ingestor
 from ingestors.support.timestamp import TimestampSupport
 from ingestors.exc import ProcessingException
+from ingestors.support.transcription import TranscriptionSupport
 
 log = logging.getLogger(__name__)
 
 
-class AudioIngestor(Ingestor, TimestampSupport):
+class AudioIngestor(Ingestor, TimestampSupport, TranscriptionSupport):
     MIME_TYPES = [
         "audio/mpeg",
         "audio/mp3",
@@ -39,6 +40,7 @@ class AudioIngestor(Ingestor, TimestampSupport):
 
     def ingest(self, file_path, entity):
         try:
+            log.critical(f"Processing: {file_path}")
             entity.schema = model.get("Audio")
             metadata = MediaInfo.parse(file_path)
             for track in metadata.tracks:
@@ -54,6 +56,10 @@ class AudioIngestor(Ingestor, TimestampSupport):
                 if track.sampling_rate:
                     entity.add("samplingRate", track.sampling_rate)
                 entity.add("duration", track.duration)
+                try:
+                    self.transcribe(file_path, entity)
+                except Exception as ex:
+                    log.error(f"Could not transcribe audio to text. {ex}")
         except Exception as ex:
             raise ProcessingException("Could not read audio: %r", ex) from ex
 

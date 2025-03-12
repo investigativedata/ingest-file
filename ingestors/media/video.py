@@ -5,6 +5,7 @@ from pymediainfo import MediaInfo
 from ingestors.ingestor import Ingestor
 from ingestors.support.timestamp import TimestampSupport
 from ingestors.exc import ProcessingException
+from ingestors.support.transcription import TranscriptionSupport
 
 log = logging.getLogger(__name__)
 
@@ -42,6 +43,10 @@ class VideoIngestor(Ingestor, TimestampSupport):
                 modified_at = self.parse_timestamp(track.file_last_modification_date)
                 entity.add("modifiedAt", modified_at)
                 entity.add("duration", track.duration)
+                try:
+                    self.transcribe(file_path, entity)
+                except Exception as ex:
+                    log.error(f"Could not transcribe audio to text. {ex}")
         except Exception as ex:
             raise ProcessingException("Could not read video: %r", ex) from ex
 

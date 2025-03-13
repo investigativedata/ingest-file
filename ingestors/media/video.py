@@ -30,7 +30,6 @@ class VideoIngestor(Ingestor, TimestampSupport):
     def ingest(self, file_path, entity):
         try:
             entity.schema = model.get("Video")
-            log.info("[%r] flagged as video.", entity)
             metadata = MediaInfo.parse(file_path)
             for track in metadata.tracks:
                 entity.add("title", track.title)
@@ -43,10 +42,10 @@ class VideoIngestor(Ingestor, TimestampSupport):
                 modified_at = self.parse_timestamp(track.file_last_modification_date)
                 entity.add("modifiedAt", modified_at)
                 entity.add("duration", track.duration)
-                try:
-                    self.transcribe(file_path, entity)
-                except Exception as ex:
-                    log.error(f"Could not transcribe audio to text. {ex}")
+            try:
+                self.transcribe(file_path, entity)
+            except Exception as ex:
+                log.error(f"Could not transcribe audio to text. {ex}")
         except Exception as ex:
             raise ProcessingException("Could not read video: %r", ex) from ex
 

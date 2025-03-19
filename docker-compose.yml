@@ -10,9 +10,6 @@ services:
     image: redis:alpine
     command: ["redis-server", "--save", "3600", "10"]
 
-  rabbitmq:
-    image: rabbitmq:3.9-management-alpine
-
   ingest-file:
     build:
       context: .
@@ -34,4 +31,3 @@ services:
     depends_on:
       - postgres
       - redis
-      - rabbitmq

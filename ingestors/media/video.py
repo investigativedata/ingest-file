@@ -10,7 +10,7 @@ from ingestors.support.transcription import TranscriptionSupport
 log = logging.getLogger(__name__)
 
 
-class VideoIngestor(Ingestor, TimestampSupport):
+class VideoIngestor(Ingestor, TimestampSupport, TranscriptionSupport):
     MIME_TYPES = [
         "application/x-shockwave-flash",
         "video/quicktime",

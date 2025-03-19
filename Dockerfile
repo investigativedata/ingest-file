@@ -104,6 +104,8 @@ RUN echo "deb http://http.us.debian.org/debian stable non-free" >/etc/apt/source
     fonts-droid-fallback fonts-dustin fonts-f500 fonts-fanwood fonts-freefont-ttf \
     fonts-liberation fonts-lmodern fonts-lyx fonts-sil-gentium fonts-texgyre \
     fonts-tlwg-purisa \
+    ffmpeg \
+    cmake \
     ###
     && apt-get -qq -y autoremove \
     && apt-get clean \
@@ -145,6 +147,12 @@ RUN python3 -m spacy download el_core_news_sm \
     && python3 -m spacy download nb_core_news_sm \
     && python3 -m spacy download da_core_news_sm
 # RUN python3 -m spacy download zh_core_web_sm
+
+RUN git clone https://github.com/ggerganov/whisper.cpp.git
+WORKDIR whisper.cpp
+RUN sh ./models/download-ggml-model.sh medium
+RUN cmake -B build
+RUN cmake --build build --config Release
 
 COPY . /ingestors
 WORKDIR /ingestors

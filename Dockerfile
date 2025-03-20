@@ -1,4 +1,31 @@
+#### BUILD WHISPER.CPP
+#----------------------------------
+FROM nvidia/cuda:11.6.2-devel-ubuntu20.04 AS build
+
+WORKDIR /usr/local/src
+RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y \
+        bash git make vim wget g++ ffmpeg cmake
+RUN git clone https://github.com/ggerganov/whisper.cpp.git --depth 1
+
+# whisper.cpp setup
+WORKDIR /usr/local/src/whisper.cpp
+RUN WHISPER_CUBLAS=0 make -j
+RUN bash ./models/download-ggml-model.sh medium.en
+
+#### copy the compiled binaries to the image for prod
+# the image above will be discarded
+# ----------------------------------
 FROM python:3.11-slim
+
+# copy whisper 
+COPY --from=build /usr/local/src/whisper.cpp /whisper
+COPY --from=build /lib/aarch64-linux-gnu/libgomp.so.1 /lib/x86_64-linux-gnu/
+
+# fix some libs
+RUN cp /whisper/build/src/libwhisper.so /lib/aarch64-linux-gnu//libwhisper.so.1
+RUN cp /whisper/build/ggml/src/*.so /lib/aarch64-linux-gnu/
+
+# ingest-file
 ENV DEBIAN_FRONTEND noninteractive
 
 LABEL org.opencontainers.image.title "FollowTheMoney File Ingestors"
@@ -105,7 +132,6 @@ RUN echo "deb http://http.us.debian.org/debian stable non-free" >/etc/apt/source
     fonts-liberation fonts-lmodern fonts-lyx fonts-sil-gentium fonts-texgyre \
     fonts-tlwg-purisa \
     ffmpeg \
-    cmake \
     ###
     && apt-get -qq -y autoremove \
     && apt-get clean \
@@ -147,12 +173,6 @@ RUN python3 -m spacy download el_core_news_sm \
     && python3 -m spacy download nb_core_news_sm \
     && python3 -m spacy download da_core_news_sm
 # RUN python3 -m spacy download zh_core_web_sm
-
-RUN git clone https://github.com/ggerganov/whisper.cpp.git
-WORKDIR whisper.cpp
-RUN sh ./models/download-ggml-model.sh medium
-RUN cmake -B build
-RUN cmake --build build --config Release
 
 COPY . /ingestors
 WORKDIR /ingestors

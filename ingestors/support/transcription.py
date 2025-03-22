@@ -8,7 +8,7 @@ from ingestors.exc import ProcessingException
 
 log = logging.getLogger(__name__)
 
-DESIRED_MODEL = "ggml-medium.en.bin"
+DESIRED_MODEL = "ggml-medium-q8_0.bin"
 DEFAULT_MODEL = "ggml-medium.en.bin"
 TRANS_TIMEOUT = 60 * 60 # maximum seconds a transcription can run
 
@@ -36,7 +36,9 @@ class TranscriptionSupport:
                 "-oj",
                 # "True",
                 "-of",
-                output_path
+                output_path,
+                "-l",
+                "auto"
                 ]   
 
         subprocess.run(cmd, timeout=TRANS_TIMEOUT, check=True)

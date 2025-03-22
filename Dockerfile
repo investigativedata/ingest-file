@@ -4,13 +4,13 @@ FROM nvidia/cuda:11.6.2-devel-ubuntu20.04 AS build
 
 WORKDIR /usr/local/src
 RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y \
-        bash git make vim wget g++ ffmpeg cmake
+        bash git make wget g++ ffmpeg cmake
 RUN git clone https://github.com/ggerganov/whisper.cpp.git --depth 1
 
 # whisper.cpp setup
 WORKDIR /usr/local/src/whisper.cpp
 RUN WHISPER_CUBLAS=0 make -j
-RUN bash ./models/download-ggml-model.sh medium.en
+RUN bash ./models/download-ggml-model.sh medium-q8_0
 
 #### copy the compiled binaries to the image for prod
 # the image above will be discarded
@@ -19,11 +19,10 @@ FROM python:3.11-slim
 
 # copy whisper 
 COPY --from=build /usr/local/src/whisper.cpp /whisper
-COPY --from=build /lib/aarch64-linux-gnu/libgomp.so.1 /lib/x86_64-linux-gnu/
+COPY --from=build /lib/*/libgomp.so.1 /whisper/build/src
 
 # fix some libs
-RUN cp /whisper/build/src/libwhisper.so /lib/aarch64-linux-gnu//libwhisper.so.1
-RUN cp /whisper/build/ggml/src/*.so /lib/aarch64-linux-gnu/
+ENV LD_LIBRARY_PATH=/whisper/build/src/:/whisper/build/ggml/src/
 
 # ingest-file
 ENV DEBIAN_FRONTEND noninteractive

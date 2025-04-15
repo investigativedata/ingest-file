@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 from followthemoney import model
 from pymediainfo import MediaInfo
 
@@ -58,9 +59,16 @@ class AudioIngestor(Ingestor, TimestampSupport, TranscriptionSupport):
         except Exception as ex:
             raise ProcessingException(f"Could not read audio: {ex}") from ex
         try:
+            start = datetime.now()
+            log.info(f"Attempting to transcribe {file_path}")
             self.transcribe(file_path, entity)
+            elapsed_time = datetime.now()-start
+            # caution! this can't store an elapsed time larger than 24h
+            # datetime.seconds capped at [0,86400)
+            elapsed_time = divmod(elapsed_time.total_seconds(), 60)[0]
+            log.info(f"Transcription duration: {elapsed_time} minutes (audio duration: {entity.get('duration')})")
         except Exception as ex:
-            log.error(f"Could not transcribe audio to text. {ex}")
+            raise ProcessingException(f"Could not transcribe file. {ex}") from ex
 
     @classmethod
     def match(cls, file_path, entity):

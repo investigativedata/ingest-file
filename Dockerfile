@@ -5,7 +5,7 @@ FROM nvidia/cuda:11.6.2-devel-ubuntu20.04 AS build
 WORKDIR /usr/local/src
 RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y \
         bash git make wget g++ ffmpeg cmake
-RUN git clone https://github.com/ggerganov/whisper.cpp.git --depth 1
+RUN git clone https://github.com/ggml-org/whisper.cpp --depth 1
 
 # whisper.cpp setup
 WORKDIR /usr/local/src/whisper.cpp
@@ -25,11 +25,11 @@ COPY --from=build /lib/*/libgomp.so.1 /whisper/build/src
 ENV LD_LIBRARY_PATH=/whisper/build/src/:/whisper/build/ggml/src/
 
 # ingest-file
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND="noninteractive"
 
-LABEL org.opencontainers.image.title "FollowTheMoney File Ingestors"
-LABEL org.opencontainers.image.licenses MIT
-LABEL org.opencontainers.image.source https://github.com/alephdata/ingest-file
+LABEL org.opencontainers.image.title="FollowTheMoney File Ingestors"
+LABEL org.opencontainers.image.licenses="MIT"
+LABEL org.opencontainers.image.source="https://github.com/alephdata/ingest-file"
 
 # Enable non-free archive for `unrar`.
 RUN echo "deb http://http.us.debian.org/debian stable non-free" >/etc/apt/sources.list.d/nonfree.list \

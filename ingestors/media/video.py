@@ -2,6 +2,7 @@ import logging
 from datetime import datetime
 from followthemoney import model
 from pymediainfo import MediaInfo
+from normality import stringify
 
 from ingestors.ingestor import Ingestor
 from ingestors.support.timestamp import TimestampSupport
@@ -57,7 +58,10 @@ class VideoIngestor(Ingestor, TimestampSupport, TranscriptionSupport):
             elapsed_time = divmod(elapsed_time.total_seconds(), 60)[0]
             log.info(f"Transcription duration: {elapsed_time} minutes (audio duration: {entity.get('duration')})")
         except Exception as ex:
-            raise ProcessingException(f"Could not transcribe file. {ex}") from ex
+            # If the transcription fails, the file processing should still count as a success.
+            # The existance of a transcription is not mandatory, for now. 
+            entity.set("processingError", stringify(ex))
+            log.error(ex)
 
     @classmethod
     def match(cls, file_path, entity):

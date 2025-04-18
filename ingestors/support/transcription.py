@@ -4,12 +4,11 @@ import logging
 import subprocess
 from pathlib import Path
 
+from ingestors import settings
 from ingestors.exc import ProcessingException
 
 log = logging.getLogger(__name__)
 
-DESIRED_MODEL = "ggml-medium-q8_0.bin"
-DEFAULT_MODEL = "ggml-medium.en.bin"
 TRANSCRIPTION_TIMEOUT = 60 * 60 * 2 # maximum seconds a transcription can run
 
 class TranscriptionSupport:
@@ -43,16 +42,10 @@ class TranscriptionSupport:
         return audio_only_path
     
     def transcribe(self, file_path, entity):
-        model = None
+        model = settings.WHISPER_MODEL
 
         models_path = Path("/whisper/models")
-        if models_path / DESIRED_MODEL in models_path.glob("*"):
-            model = DESIRED_MODEL
-            log.info(f"The desired transcription model ({DESIRED_MODEL}) was found.")
-        else:
-            model = DEFAULT_MODEL
-            log.error(f"The desired transcription model ({DESIRED_MODEL}) isn't installed. Using the default ({DEFAULT_MODEL}).")
-
+        
         output_path = Path("/ingestors") / file_path.parts[-1].split(".")[0]
 
         cmd = ["/whisper/build/bin/whisper-cli",
@@ -65,7 +58,7 @@ class TranscriptionSupport:
                 output_path,
                 "-l",
                 # setting to "auto" sometimes transcribes audio in an unintended language
-                "en"
+                settings.WHISPER_LANGUAGE
                 ]   
 
         try:
@@ -75,7 +68,7 @@ class TranscriptionSupport:
         # if the transcription succeeded, the output is written to a JSON
         output_path = output_path.with_suffix(".json")
         if not output_path.is_file():
-            raise ProcessingException(f"Transcription failed. The file type might be unsupported.")
+            raise ProcessingException(f"Transcription failed. The file type might be unsupported for {file_path.parts[-1]}.")
 
         with open(output_path, "r") as f:
             transcription_dict = json.loads(f.read())
@@ -85,9 +78,9 @@ class TranscriptionSupport:
             full_transcription = ""
             for interval in transcription_intervals:
                 full_transcription += f"[{interval['timestamps']['from']} -> {interval['timestamps']['to']}] {interval['text'].strip()}"
-            entity.add("bodyText", full_transcription)
+            entity.add("indexText", full_transcription)
         else:
-            Path.unlink(output_path)
+            self.delete_temporary_file(output_path)
             raise ProcessingException(f"Transcription failed, no output in file {output_path}.")
         
         self.delete_temporary_file(output_path)

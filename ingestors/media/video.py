@@ -52,14 +52,16 @@ class VideoIngestor(Ingestor, TimestampSupport, TranscriptionSupport):
             log.info(f"Attempting to transcribe {file_path}")
             audio_only_file = self.extract_audio(file_path)
             self.transcribe(audio_only_file, entity)
-            elapsed_time = datetime.now()-start
+            elapsed_time = datetime.now() - start
             # caution! this can't store an elapsed time larger than 24h
             # datetime.seconds capped at [0,86400)
             elapsed_time = divmod(elapsed_time.total_seconds(), 60)[0]
-            log.info(f"Transcription duration: {elapsed_time} minutes (audio duration: {entity.get('duration')})")
+            log.info(
+                f"Transcription duration: {elapsed_time} minutes (audio duration: {entity.get('duration')})"
+            )
         except Exception as ex:
             # If the transcription fails, the file processing should still count as a success.
-            # The existance of a transcription is not mandatory, for now. 
+            # The existance of a transcription is not mandatory, for now.
             entity.set("processingError", stringify(ex))
             log.error(ex)
 

@@ -4,12 +4,16 @@ from unittest import mock
 
 from .support import TestCase, TranscriptionSupport_
 
+
 class AudioIngestorTest(TestCase):
     def test_audio(self):
         fixture_path, entity = self.fixture("memo.m4a")
-        
+
         # Mock the transcription class because running the code takes a very long time
-        patcher = mock.patch("ingestors.support.transcription.TranscriptionSupport", new=TranscriptionSupport_)
+        patcher = mock.patch(
+            "ingestors.support.transcription.TranscriptionSupport",
+            new=TranscriptionSupport_,
+        )
         patcher.start()
         self.manager.ingest(fixture_path, entity)
         patcher.stop()

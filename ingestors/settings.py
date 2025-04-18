@@ -61,3 +61,7 @@ SENTRY_CAPTURE_PROCESSING_EXCEPTIONS = env.to_bool(
 WHISPER_MODEL = env.get("INGESTORS_WHISPER_MODEL", "ggml-medium-q8_0.bin")
 # "auto" prompts the model to detect the language
 WHISPER_LANGUAGE = env.get("INGESTORS_WHISPER_LANGUAGE", "auto")
+# timeout expressed in seconds
+WHISPER_TRANSCRIPTION_TIMEOUT = env.get(
+    "INGESTORS_WHISPER_TRANSCRIPTION_TIMEOUT", 60 * 60 * 2
+)

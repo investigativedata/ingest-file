@@ -8,8 +8,6 @@ from ingestors.exc import ProcessingException
 
 log = logging.getLogger(__name__)
 
-TRANSCRIPTION_TIMEOUT = 60 * 60 * 2  # maximum seconds a transcription can run
-
 
 class TranscriptionSupport:
     """Provides a helper for transcribing audio and video files."""
@@ -33,7 +31,7 @@ class TranscriptionSupport:
         ]
 
         try:
-            subprocess.run(cmd, timeout=TRANSCRIPTION_TIMEOUT, check=True)
+            subprocess.run(cmd, timeout=settings.TRANSCRIPTION_TIMEOUT, check=True)
         except subprocess.CalledProcessError as e:
             raise e
 
@@ -64,7 +62,7 @@ class TranscriptionSupport:
         ]
 
         try:
-            subprocess.run(cmd, timeout=TRANSCRIPTION_TIMEOUT, check=True)
+            subprocess.run(cmd, timeout=settings.TRANSCRIPTION_TIMEOUT, check=True)
         except subprocess.CalledProcessError as e:
             raise e
         # if the transcription succeeded, the output is written to a JSON

@@ -64,8 +64,9 @@ class TranscriptionSupport:
         ]
 
         try:
+            log.info(cmd)
             subprocess.run(
-                cmd, timeout=settings.WHISPER_TRANSCRIPTION_TIMEOUT, check=True
+                cmd, timeout=int(settings.WHISPER_TRANSCRIPTION_TIMEOUT), check=True
             )
         except subprocess.CalledProcessError as e:
             raise e
@@ -85,6 +86,7 @@ class TranscriptionSupport:
             for interval in transcription_intervals:
                 full_transcription += f"[{interval['timestamps']['from']} -> {interval['timestamps']['to']}] {interval['text'].strip()}"
             entity.add("indexText", full_transcription)
+
         else:
             self.delete_temporary_file(output_path)
             raise ProcessingException(

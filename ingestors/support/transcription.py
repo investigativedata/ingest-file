@@ -31,7 +31,9 @@ class TranscriptionSupport:
         ]
 
         try:
-            subprocess.run(cmd, timeout=settings.TRANSCRIPTION_TIMEOUT, check=True)
+            subprocess.run(
+                cmd, timeout=settings.WHISPER_TRANSCRIPTION_TIMEOUT, check=True
+            )
         except subprocess.CalledProcessError as e:
             raise e
 
@@ -62,7 +64,9 @@ class TranscriptionSupport:
         ]
 
         try:
-            subprocess.run(cmd, timeout=settings.TRANSCRIPTION_TIMEOUT, check=True)
+            subprocess.run(
+                cmd, timeout=settings.WHISPER_TRANSCRIPTION_TIMEOUT, check=True
+            )
         except subprocess.CalledProcessError as e:
             raise e
         # if the transcription succeeded, the output is written to a JSON

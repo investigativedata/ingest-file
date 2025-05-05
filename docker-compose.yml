@@ -31,4 +31,3 @@ services:
     depends_on:
       - postgres
       - redis
-      - rabbitmq
